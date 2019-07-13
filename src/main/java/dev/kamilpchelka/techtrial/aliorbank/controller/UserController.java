@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 public class UserController {
 
-    public static final List<String> balanceAllowedOperations = Arrays.asList("decrease", "increase");
+    public static final List<String> BALANCE_ALLOWED_OPERATIONS = Arrays.asList("decrease", "increase");
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -40,7 +40,7 @@ public class UserController {
     public ResponseEntity updateBalance(@PathVariable("id") long id, @RequestBody UserDTO userDTO,
                                         @RequestParam String operation) {
         operation = operation.toLowerCase();
-        if (!balanceAllowedOperations.contains(operation)) {
+        if (!BALANCE_ALLOWED_OPERATIONS.contains(operation)) {
             return ResponseEntity.badRequest().build();
         }
         boolean isBalanceUpdated = userService.updateBalance(id, userDTO.getBalance(), operation);
