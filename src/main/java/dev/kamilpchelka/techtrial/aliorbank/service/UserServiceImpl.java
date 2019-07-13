@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import static dev.kamilpchelka.techtrial.aliorbank.controller.UserController.BALANCE_ALLOWED_OPERATIONS;
+
 /**
  * UserServiceImpl for User related handling.
  *
@@ -36,6 +38,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean updateBalance(Long userId, @NotNull BigDecimal balance, String operation) {
+        if (!BALANCE_ALLOWED_OPERATIONS.contains(operation)) {
+            return false;
+        }
         Optional<User> optionalUser = userRepository.findById(userId);
         if (!optionalUser.isPresent()) {
             return false;
