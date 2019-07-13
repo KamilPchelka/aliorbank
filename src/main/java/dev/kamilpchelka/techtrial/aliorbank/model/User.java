@@ -27,6 +27,6 @@ public class User implements Serializable {
     @Column(name = "date_of_birth")
     Date dateOfBirth;
 
-    @Column(name = "balance")
+    @Column(name = "balance", precision = 12, scale = 4)
     BigDecimal balance;
 }
