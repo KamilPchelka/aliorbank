@@ -4,6 +4,7 @@ import dev.kamilpchelka.techtrial.aliorbank.dto.UserDTO;
 import dev.kamilpchelka.techtrial.aliorbank.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -26,5 +27,13 @@ public class UserController {
         return ResponseEntity.ok(userDTOS);
     }
 
+    @GetMapping(path = "/api/users/{id}")
+    public ResponseEntity<UserDTO> getSingleUser(@PathVariable("id") long userId) {
+        UserDTO userDTO = userService.retrieveUser(userId);
+        if (userDTO == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(userDTO);
+    }
 
 }
