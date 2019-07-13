@@ -3,15 +3,15 @@ package dev.kamilpchelka.techtrial.aliorbank.controller;
 import dev.kamilpchelka.techtrial.aliorbank.dto.UserDTO;
 import dev.kamilpchelka.techtrial.aliorbank.service.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
 public class UserController {
 
+    public static final List<String> balanceAllowedOperations = Arrays.asList("decrease", "increase");
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -34,6 +34,20 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(userDTO);
+    }
+
+    @PatchMapping(path = "/api/users/{id}/balance")
+    public ResponseEntity updateBalance(@PathVariable("id") long id, @RequestBody UserDTO userDTO,
+                                        @RequestParam String operation) {
+        operation = operation.toLowerCase();
+        if (!balanceAllowedOperations.contains(operation)) {
+            return ResponseEntity.badRequest().build();
+        }
+        boolean isBalanceUpdated = userService.updateBalance(id, userDTO.getBalance(), operation);
+        if (!isBalanceUpdated) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.noContent().build();
     }
 
 }
